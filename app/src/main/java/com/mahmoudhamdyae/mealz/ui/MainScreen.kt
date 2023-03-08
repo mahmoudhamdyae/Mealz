@@ -9,23 +9,48 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.mahmoudhamdyae.domain.models.Category
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun MainScreen(
-    mealz: List<Category>,
+    state: MealzUiState,
+    onSelectedItem: (Category) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    if (state.isLoading) {
+        Box(modifier = modifier.fillMaxSize()) {
+            CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+        }
+    } else if (state.error != null) {
+        Box(
+            modifier = modifier.fillMaxSize()
+        ) {
+            Text(
+                text = state.error,
+                color = Color.Red,
+                textAlign = TextAlign.Center
+            )
+        }
+    } else {
+        MainList(state = state, onSelectedItem = onSelectedItem, modifier =  modifier)
+    }
+}
+
+@OptIn(ExperimentalAnimationApi::class)
+@Composable
+fun MainList(
+    state: MealzUiState,
     onSelectedItem: (Category) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -46,7 +71,7 @@ fun MainScreen(
         modifier = modifier
     ) {
         LazyColumn {
-            itemsIndexed(mealz) { index, meal ->
+            itemsIndexed(state.mealz!!) { index, meal ->
                 MealListItem(
                     meal = meal,
                     onSelectedItem = onSelectedItem,
