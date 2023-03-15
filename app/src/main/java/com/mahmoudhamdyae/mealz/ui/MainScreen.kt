@@ -124,7 +124,6 @@ fun MealListItem(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
                 .sizeIn(minHeight = 82.dp, maxHeight = 82.dp)
         ) {
             AsyncImage(
