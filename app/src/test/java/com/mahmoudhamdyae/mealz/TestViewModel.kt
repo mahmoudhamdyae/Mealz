@@ -1,6 +1,7 @@
 package com.mahmoudhamdyae.mealz
 
 import com.mahmoudhamdyae.data.remote.asDomainModel
+import com.mahmoudhamdyae.domain.repositories.MealzRepository
 import com.mahmoudhamdyae.domain.usecases.GetMealz
 import com.mahmoudhamdyae.mealz.fake.FakeDataSource
 import com.mahmoudhamdyae.mealz.fake.FakeRepository
@@ -18,8 +19,8 @@ class TestViewModel {
     @get:Rule
     val testDispatcher = TestDispatcherRule()
 
+    private lateinit var fakeRepository: MealzRepository
     private lateinit var getMealzUseCase: GetMealz
-    private lateinit var fakeRepository: FakeRepository
     private lateinit var viewModel: MealzViewModel
 
     @Before

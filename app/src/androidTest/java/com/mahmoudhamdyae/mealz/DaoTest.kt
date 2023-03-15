@@ -3,21 +3,22 @@ package com.mahmoudhamdyae.mealz
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import app.cash.turbine.test
 import com.mahmoudhamdyae.data.local.LocalMeal
 import com.mahmoudhamdyae.data.local.MealzDao
 import com.mahmoudhamdyae.data.local.MealzDatabase
-import junit.framework.TestCase.assertEquals
+import com.mahmoudhamdyae.mealz.rules.TestDispatcherRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
-import org.junit.After
-import org.junit.Assert
-import org.junit.Before
-import org.junit.Test
+import org.junit.*
 import org.junit.runner.RunWith
 import java.io.IOException
 
 @RunWith(AndroidJUnit4::class)
 class DaoTest {
+
+    @get: Rule
+    val dispatcherRule = TestDispatcherRule()
 
     private lateinit var dao: MealzDao
     private lateinit var database: MealzDatabase
@@ -57,11 +58,11 @@ class DaoTest {
     fun daoInsert_InsertMealIntoDb() = runTest {
         addOneMealToDb()
 
-        var mealz = listOf<LocalMeal>()
-        dao.getMealz().collect {
-            mealz = it
+        dao.getMealz().test {
+            val list = awaitItem()
+            assert(list.contains(meal1))
+            cancel()
         }
-        assertEquals(mealz[0], meal1)
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -69,11 +70,11 @@ class DaoTest {
     @Throws(Exception::class)
     fun daoGetAllItems_returnsAllItemsFromDB() = runTest {
         addTwoMealzToDb()
-        var mealz = listOf<LocalMeal>()
-        dao.getMealz().collect {
-            mealz = it
+
+        dao.getMealz().test {
+            val list = awaitItem()
+            assert(list.contains(meal1))
+            assert(list.contains(meal2))
         }
-        Assert.assertEquals(mealz[0], meal1)
-        Assert.assertEquals(mealz[1], meal2)
     }
 }
