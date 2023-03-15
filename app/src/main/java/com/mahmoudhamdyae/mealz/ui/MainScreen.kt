@@ -143,11 +143,12 @@ fun MealListItem(
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = meal.strCategory,
-                    style = MaterialTheme.typography.labelMedium
+                    style = MaterialTheme.typography.headlineMedium,
+                    maxLines = 1,
                 )
                 Text(
                     text = meal.strCategoryDescription,
-                    style = MaterialTheme.typography.labelSmall,
+                    style = MaterialTheme.typography.bodySmall,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis
                 )
