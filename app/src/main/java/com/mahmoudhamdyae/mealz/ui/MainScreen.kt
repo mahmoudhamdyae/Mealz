@@ -16,42 +16,48 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.mahmoudhamdyae.domain.models.Category
+import coil.request.ImageRequest
+import com.mahmoudhamdyae.domain.models.Meal
+import com.mahmoudhamdyae.mealz.R
+import java.util.Locale.Category
 
 @Composable
 fun MainScreen(
-    state: MealzUiState,
-    onSelectedItem: (Category) -> Unit,
+    uiState: MealzUiState,
+    onSelectedItem: (Meal) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    if (state.isLoading) {
+    if (uiState.isLoading) {
         Box(modifier = modifier.fillMaxSize()) {
             CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
         }
-    } else if (state.error != null) {
+    } else if (uiState.error != null) {
         Box(
             modifier = modifier.fillMaxSize()
         ) {
             Text(
-                text = state.error,
+                text = uiState.error,
                 color = Color.Red,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                modifier = Modifier.align(Alignment.Center)
             )
         }
     } else {
-        MainList(state = state, onSelectedItem = onSelectedItem, modifier =  modifier)
+        MainList(mealz = uiState.mealz, onSelectedItem = onSelectedItem, modifier =  modifier)
     }
 }
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun MainList(
-    state: MealzUiState,
-    onSelectedItem: (Category) -> Unit,
+    mealz: List<Meal>,
+    onSelectedItem: (Meal) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val visibleState = remember {
@@ -71,7 +77,7 @@ fun MainList(
         modifier = modifier
     ) {
         LazyColumn {
-            itemsIndexed(state.mealz!!) { index, meal ->
+            itemsIndexed(mealz) { index, meal ->
                 MealListItem(
                     meal = meal,
                     onSelectedItem = onSelectedItem,
@@ -95,8 +101,8 @@ fun MainList(
 
 @Composable
 fun MealListItem(
-    meal: Category,
-    onSelectedItem: (Category) -> Unit,
+    meal: Meal,
+    onSelectedItem: (Meal) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -111,7 +117,12 @@ fun MealListItem(
                 .sizeIn(minHeight = 82.dp, maxHeight = 82.dp)
         ) {
             AsyncImage(
-                model = meal.strCategoryThumb,
+                model = ImageRequest.Builder(context = LocalContext.current)
+                    .data(meal.strCategoryThumb)
+                    .crossfade(true)
+                    .build(),
+                error = painterResource(R.drawable.ic_broken_image),
+                placeholder = painterResource(R.drawable.loading_img),
                 contentDescription = meal.strCategory,
                 alignment = Alignment.TopCenter,
                 contentScale = ContentScale.FillWidth,

@@ -1,9 +1,9 @@
 package com.mahmoudhamdyae.mealz.ui
 
-import com.mahmoudhamdyae.domain.models.Category
+import com.mahmoudhamdyae.domain.models.Meal
 
 data class MealzUiState(
-    val mealz: List<Category>? = null,
+    val mealz: List<Meal> = listOf(),
     val isLoading: Boolean = false,
     val error: String? = null,
 )

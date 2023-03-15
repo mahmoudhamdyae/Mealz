@@ -1,8 +1,8 @@
 package com.mahmoudhamdyae.domain.repositories
 
-import com.mahmoudhamdyae.domain.models.Category
+import com.mahmoudhamdyae.domain.models.Meal
 
 interface MealzRepository {
 
-    suspend fun getMealzFromRemote(): List<Category>
+    suspend fun getMealz(): List<Meal>
 }

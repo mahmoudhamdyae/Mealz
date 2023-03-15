@@ -10,21 +10,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.mahmoudhamdyae.domain.models.Category
+import com.mahmoudhamdyae.domain.models.Meal
 import com.mahmoudhamdyae.mealz.R
 
 @Composable
 fun MealzApp(
-    onSelectedItem: (Category) -> Unit,
+    onSelectedItem: (Meal) -> Unit,
     viewModel: MealzViewModel = viewModel()
 ) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = { TopAppBar() }
     ) { contentPadding ->
-        val state = viewModel.state
+        val state = viewModel.uiState
         MainScreen(
-            state = state,
+            uiState = state,
             onSelectedItem = onSelectedItem,
             modifier = Modifier.padding(contentPadding)
         )

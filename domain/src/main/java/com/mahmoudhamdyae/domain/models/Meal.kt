@@ -1,6 +1,6 @@
 package com.mahmoudhamdyae.domain.models
 
-data class Category(
+data class Meal(
     val idCategory: String,
     val strCategory: String,
     val strCategoryDescription: String,

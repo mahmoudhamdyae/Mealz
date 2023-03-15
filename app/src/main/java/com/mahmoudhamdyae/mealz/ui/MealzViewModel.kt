@@ -1,23 +1,22 @@
 package com.mahmoudhamdyae.mealz.ui
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mahmoudhamdyae.domain.models.Result
 import com.mahmoudhamdyae.domain.usecases.GetMealz
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import com.mahmoudhamdyae.domain.models.Result
 
 @HiltViewModel
 class MealzViewModel @Inject constructor(
     private val getMealz: GetMealz
 ): ViewModel() {
 
-    var state by mutableStateOf(MealzUiState())
+    var uiState by mutableStateOf(MealzUiState())
      private set
 
     init {
@@ -26,22 +25,22 @@ class MealzViewModel @Inject constructor(
 
     private fun getAllMealz() {
         viewModelScope.launch {
-            state = state.copy(
-                mealz = null,
+            uiState = uiState.copy(
+                mealz = listOf(),
                 isLoading = true,
                 error = null
             )
             when (val response = getMealz()) {
                 is Result.Success -> {
-                    state = state.copy(
+                    uiState = uiState.copy(
                         mealz = response.data,
                         isLoading = false,
                         error = null
                     )
                 }
                 is Result.Error -> {
-                    state = state.copy(
-                        mealz = null,
+                    uiState = uiState.copy(
+                        mealz = listOf(),
                         isLoading = false,
                         error = response.message
                     )
