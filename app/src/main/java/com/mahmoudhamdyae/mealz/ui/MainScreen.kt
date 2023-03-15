@@ -25,7 +25,6 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.mahmoudhamdyae.domain.models.Meal
 import com.mahmoudhamdyae.mealz.R
-import java.util.Locale.Category
 
 @Composable
 fun MainScreen(
@@ -38,18 +37,30 @@ fun MainScreen(
             CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
         }
     } else if (uiState.error != null) {
-        Box(
-            modifier = modifier.fillMaxSize()
-        ) {
-            Text(
-                text = uiState.error,
-                color = Color.Red,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.align(Alignment.Center)
-            )
-        }
+        ErrorScreen(errorText = uiState.error, modifier = modifier)
     } else {
-        MainList(mealz = uiState.mealz, onSelectedItem = onSelectedItem, modifier =  modifier)
+        if (uiState.mealz.isEmpty()) {
+            ErrorScreen(errorText = "There is no internet connection", modifier = modifier)
+        } else {
+            MainList(mealz = uiState.mealz, onSelectedItem = onSelectedItem, modifier =  modifier)
+        }
+    }
+}
+
+@Composable
+fun ErrorScreen(
+    errorText: String,
+    modifier: Modifier = Modifier
+) {
+    Box(
+        modifier = modifier.fillMaxSize()
+    ) {
+        Text(
+            text = errorText,
+            color = Color.Red,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.align(Alignment.Center)
+        )
     }
 }
 

@@ -32,11 +32,13 @@ class MealzViewModel @Inject constructor(
             )
             when (val response = getMealz()) {
                 is Result.Success -> {
-                    uiState = uiState.copy(
-                        mealz = response.data,
-                        isLoading = false,
-                        error = null
-                    )
+                    response.data.collect {
+                        uiState = uiState.copy(
+                            mealz = it,
+                            isLoading = false,
+                            error = null
+                        )
+                    }
                 }
                 is Result.Error -> {
                     uiState = uiState.copy(
